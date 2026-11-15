@@ -1,0 +1,307 @@
+Lesson 01 – Introduction & System Architecture
+
+Project: PhonePrint
+Series: PhonePrint Development Series
+Lesson: 01 of 06
+Level: Beginner to Intermediate
+Target Platform: Windows 11, Android and iOS
+Status: Documentation and architecture phase
+
+---
+
+1. Introduction
+
+What is PhonePrint?
+
+PhonePrint is an open-source software project designed to explore smartphone-based biometric authentication for Windows laptops.
+
+The main idea is simple:
+
+Instead of relying only on traditional password or PIN entry, users can authenticate a Windows laptop through a trusted smartphone using fingerprint authentication, Face ID or another supported biometric method.
+
+PhonePrint aims to connect three major technologies:
+
+- Mobile biometric authentication
+- Secure cryptographic communication
+- Windows authentication integration
+
+The Problem
+
+Traditional laptop authentication generally requires users to enter a password, PIN or use an existing supported authentication method.
+
+PhonePrint explores an additional authentication experience using a smartphone that the user already owns.
+
+ Solution
+
+PhonePrint introduces a secure communication system between a smartphone and a Windows laptop.
+
+The smartphone verifies the user locally using the operating system's biometric authentication APIs. It then uses a protected cryptographic key to sign an authentication challenge.
+
+The Windows application verifies that signature.
+
+Important: Successful signature verification is not itself a Windows login. Actual Windows sign-in requires a supported Windows authentication integration.
+
+---
+
+2. Project Objectives
+
+The main objectives are:
+
+1. Develop a cross-platform mobile application.
+2. Implement native biometric authentication.
+3. Protect cryptographic keys using platform security features.
+4. Establish secure communication between devices.
+5. Build a Windows background authentication agent.
+6. Explore Windows Credential Provider integration.
+7. Maintain password and PIN recovery options.
+
+---
+
+3. Supported Platforms
+
+Platform| Purpose
+Android| Fingerprint authentication
+iOS| Face ID / Touch ID
+Windows 11| Laptop authentication
+Linux| Possible future extension
+
+---
+
+4. Technology Stack
+
+Mobile Development
+
+- Flutter
+- Dart
+- Kotlin
+- Swift
+
+Windows Development
+
+- C#
+- .NET
+- C++
+- Windows SDK
+
+Security
+
+- Public-key cryptography
+- ECDSA P-256
+- Android Keystore
+- Apple Keychain / Secure Enclave
+- Challenge-response authentication
+
+Communication
+
+- HTTPS
+- WebSockets
+- QR-based device pairing
+- Local network discovery
+
+Database
+
+- SQLite
+
+Development Tools
+
+- Visual Studio Code
+- Android Studio
+- Visual Studio
+- Git
+- GitHub
+- Figma
+
+---
+
+5. System Architecture
+
+PhonePrint consists of three major components.
+
+A. Mobile Application
+
+The mobile application is responsible for:
+
+- User interface
+- Device registration
+- Biometric authentication
+- Secure key management
+- Authentication challenge signing
+
+B. Windows Agent
+
+The Windows Agent is responsible for:
+
+- Device management
+- Secure communication
+- Challenge generation
+- Signature verification
+- Authentication request handling
+
+C. Windows Credential Provider
+
+The Windows Credential Provider is the planned native integration responsible for connecting PhonePrint with the Windows sign-in experience.
+
+It must work with a supported Windows authentication mechanism and must not bypass Windows security.
+
+---
+
+6. Architecture Diagram
+
+flowchart TD
+    A[User] --> B[PhonePrint Mobile App]
+
+    B --> C{Biometric Verification}
+
+    C -->|Successful| D[Protected Private Key]
+    C -->|Failed| E[Authentication Denied]
+
+    D --> F[Sign Authentication Challenge]
+
+    F --> G[Secure Device Communication]
+
+    G --> H[Windows PhonePrint Agent]
+
+    H --> I[Public Key Signature Verification]
+
+    I -->|Valid| J[Credential Provider Integration]
+    I -->|Invalid| K[Reject Request]
+
+    J --> L[Windows Authentication]
+
+---
+
+7. Authentication Workflow
+
+The planned authentication process:
+
+1. User requests authentication from the Windows sign-in interface.
+2. Windows integration initiates an authentication request.
+3. Windows Agent generates a fresh random challenge.
+4. The challenge is transmitted securely to the registered smartphone.
+5. The smartphone asks the user to authenticate using its native biometric interface.
+6. If authentication succeeds, the protected private key signs the challenge.
+7. The signed response is returned to the Windows Agent.
+8. The Windows Agent verifies the signature using the registered public key.
+9. The Windows authentication integration processes the approved authentication flow.
+
+If verification fails, authentication is rejected.
+
+---
+
+8. Security Principles
+
+Security is a core requirement of PhonePrint.
+
+The project follows these principles:
+
+- Never collect or store fingerprint images.
+- Never transmit biometric templates.
+- Never store plain-text Windows passwords.
+- Keep private keys protected by platform security.
+- Use fresh authentication challenges.
+- Prevent replay attacks.
+- Verify registered device identities.
+- Allow users to revoke paired devices.
+- Preserve Windows password and PIN recovery.
+
+Biometric verification and cryptographic authorization must be treated as separate security operations.
+
+---
+
+9. Repository Structure
+
+PhonePrint/
+│
+├── Lessons/
+│   ├── Lesson-01-Introduction/
+│   ├── Lesson-02-Biometrics/
+│   ├── Lesson-03-Cryptography/
+│   ├── Lesson-04-Connectivity/
+│   ├── Lesson-05-Windows-Integration/
+│   └── Lesson-06-Testing-Release/
+│
+├── mobile/
+├── windows/
+├── docs/
+├── README.md
+├── LICENSE
+└── CONTRIBUTING.md
+
+---
+
+10. Learning Outcomes
+
+After completing this lesson, you should understand:
+
+- What PhonePrint is.
+- Why the project is being developed.
+- How mobile biometric authentication works at a high level.
+- What public-key cryptography does.
+- How mobile devices and Windows communicate.
+- What Windows Credential Providers are.
+- Why security is important in authentication systems.
+
+---
+
+11. Practical Assignments
+
+Task 1: Research
+
+Read the official documentation for:
+
+- Android BiometricPrompt
+- Apple LocalAuthentication
+- Windows Credential Providers
+
+Task 2: Architecture
+
+Understand the PhonePrint architecture and explain the role of each component.
+
+Task 3: Repository Setup
+
+Create your GitHub repository and add the initial folder structure.
+
+Task 4: Technology Setup
+
+Install:
+
+- Git
+- Flutter SDK
+- Android Studio
+- Visual Studio Code
+
+Task 5: Documentation
+
+Write a short explanation of how your smartphone could securely authenticate a laptop without transmitting fingerprint information.
+
+---
+
+12. Official References
+
+- "Android BiometricPrompt" (https://developer.android.com/reference/android/hardware/biometrics/BiometricPrompt)
+- "Android Keystore" (https://developer.android.com/privacy-and-security/keystore)
+- "Apple LocalAuthentication" (https://developer.apple.com/documentation/localauthentication)
+- "Apple Secure Enclave" (https://developer.apple.com/documentation/security/certificate_key_and_trust_services/keys/protecting_keys_with_the_secure_enclave)
+- "Windows Credential Providers" (https://learn.microsoft.com/en-us/windows/win32/secauthn/credential-providers)
+- "Flutter Documentation" (https://docs.flutter.dev/)
+
+---
+
+13. Next Lesson
+
+Lesson 02 – Mobile Biometric Authentication
+
+In the next lesson, we will:
+
+- Create the PhonePrint Flutter application.
+- Design the mobile home screen.
+- Implement Android fingerprint authentication.
+- Explore iOS Face ID and Touch ID.
+- Test successful and unsuccessful authentication.
+
+---
+
+PhonePrint Development Series
+Dream | Learn | Build
+
+This project is under development. The architecture describes intended functionality, not a completed or production-certified authentication system.
